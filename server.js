@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import MyUserRoute from "./routes/MyUserRoute.js";
 import MyRestaurantRoute from "./routes/MyRestaurantRoute.js";
 import RestaurantRoute from "./routes/RestaurantRoute.js";
+import OrderRoute from "./routes/OrderRoute.js";
 import { v2 as cloudinary } from "cloudinary";
 
 // Connect to DB
@@ -22,8 +23,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json());
 app.use(cors());
+app.use("/api/order/checkout/webhook", express.raw({ type: "*/*" }));
+app.use(express.json());
 
 app.get("/health", async (req, res) => {
   res.send({ message: "health OK!" });
@@ -33,6 +35,7 @@ app.get("/health", async (req, res) => {
 app.use("/api/my/user", MyUserRoute);
 app.use("/api/my/restaurant", MyRestaurantRoute);
 app.use("/api/restaurant", RestaurantRoute);
+app.use("/api/order", OrderRoute);
 
 app.listen(port, () =>
   console.log(`Server listening at http://localhost:${port}`)
